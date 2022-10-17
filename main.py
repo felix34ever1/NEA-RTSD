@@ -42,8 +42,12 @@ while is_running:
     # LMB Logic
     if buttons_pressed[0] == True:
         if mouse_down == False:
-            mouse_down = True
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            if mouse_x > 868 or mouse_y > 580: #If mouse position in Hud:
+                hud.on_press(mouse_x,mouse_y)
+            else:
+                mouse_down = True
+
         else:
             down_length+=1
             next_mouse_x, next_mouse_y = pygame.mouse.get_pos()
@@ -84,7 +88,8 @@ while is_running:
 
     # RMB Logic
     if buttons_pressed[1] == True:
-        pass # Order
+        if mouse_x < 868 or mouse_y < 580: #If mouse position not in Hud:
+            pass # Order
 
 
     for event in pygame.event.get():
