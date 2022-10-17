@@ -2,6 +2,7 @@ import pygame
 import random
 
 pygame.init()
+from hud import Hud
 
 # Display settings
 WINDOW_WIDTH = 1000
@@ -19,12 +20,16 @@ building_list = []
 natural_building_list = []
 projectile_list = []
 
+# One time instances defined
+hud = Hud(building_list,natural_building_list,SCREEN)
+
 #Ingame trackers
 money = 100
 
 #Mouse Tracking variables
 mouse_down = False
 down_length = 0
+mouse_x, mouse_y = 0,0
 
 #Run loop
 is_running = True
@@ -42,10 +47,29 @@ while is_running:
         else:
             down_length+=1
             next_mouse_x, next_mouse_y = pygame.mouse.get_pos()
-            pygame.draw.rect(SCREEN,(255,255,0),
-            (mouse_x,mouse_y,
-            (abs(mouse_x-next_mouse_x)),
-            (abs(mouse_y-next_mouse_y))),4)
+            if mouse_x<next_mouse_x:
+                if mouse_y<next_mouse_y:
+                    pygame.draw.rect(SCREEN,(255,255,0),
+                    (mouse_x,mouse_y,
+                    (abs(mouse_x-next_mouse_x)),
+                    (abs(mouse_y-next_mouse_y))),4)
+                else:
+                    pygame.draw.rect(SCREEN,(255,255,0),
+                    (mouse_x,next_mouse_y,
+                    (abs(mouse_x-next_mouse_x)),
+                    (abs(mouse_y-next_mouse_y))),4)
+            else:
+                if mouse_y<next_mouse_y:
+                    pygame.draw.rect(SCREEN,(255,255,0),
+                    (next_mouse_x,mouse_y,
+                    (abs(mouse_x-next_mouse_x)),
+                    (abs(mouse_y-next_mouse_y))),4)
+                else:
+                    pygame.draw.rect(SCREEN,(255,255,0),
+                    (next_mouse_x,next_mouse_y,
+                    (abs(mouse_x-next_mouse_x)),
+                    (abs(mouse_y-next_mouse_y))),4)                    
+
  
     else:
         if mouse_down == True:
@@ -69,6 +93,7 @@ while is_running:
             is_running = False
 
 
+    hud.update()
     pygame.display.update()
 
     clock.tick(fps)
