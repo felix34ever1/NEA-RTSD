@@ -5,6 +5,8 @@
 
 import pygame
 
+from unitbutton import UnitButton
+
 
 class Hud():
 
@@ -41,8 +43,14 @@ class Hud():
         pygame.draw.rect(self.SCREEN,(150,160,170),(0,580,1000,64))
 
         for button in self.buttons_list:
-            if button.is_available():
-                self.SCREEN.blit(button.get_rect(),button.get_pos())
+            if self.state == 0: #Building menu
+                if button.is_available():
+                    if button.isinstance(BuildingButton):
+                        self.SCREEN.blit(button.get_rect(),button.get_pos())
+            else:
+                if button.is_available():
+                    if button.isinstance(UnitButton):
+                        self.SCREEN.blit(button.get_rect(),button.get_pos())
 
             if button.isinstance(UnitButton): # Updates unit producing buttons to see if they're allowed to be active.
                 for building in self.building_list:
@@ -53,4 +61,4 @@ class Hud():
                                 x, y = building.get_pos()[0].building.get_pos[1]
                                 button.set_spawn_pos(x,y)
                                 break
-                    
+            
