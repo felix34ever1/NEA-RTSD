@@ -43,7 +43,7 @@ while is_running:
     if buttons_pressed[0] == True:
         if mouse_down == False:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            if mouse_x > 868 or mouse_y > 580: #If mouse position in Hud:
+            if mouse_x > 864 or mouse_y > 576: #If mouse position in Hud:
                 hud.on_press(mouse_x,mouse_y)
             else:
                 mouse_down = True

@@ -11,7 +11,7 @@ class Button():
     def __init__(self,SCREEN:pygame.Surface ,button_list: list, image: str="images/default.png", exec_string: str="",cost:int=1):
         self.SCREEN = SCREEN
         self.image = pygame.image.load(image)
-        self.availability = False
+        self.availability = True
         self.exec_string = exec_string # Used as the command that creates a unit/building.
         self.cost = cost
         self.pos = [30,60]

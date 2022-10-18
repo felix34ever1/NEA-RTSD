@@ -7,6 +7,7 @@ import pygame
 
 from buildingbutton import BuildingButton
 from unitbutton import UnitButton
+from button import Button
 
 class Hud():
 
@@ -16,26 +17,32 @@ class Hud():
         self.natural_building_list = natural_building_list
         self.SCREEN = SCREEN
         self.buttons_list = []
-        self.buttons_list = [BuildingButton(self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
+        self.buttons_list = [BuildingButton(self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
         self.state = 0
+        self.change_button_0 = Button(SCREEN,self.buttons_list,"images/building_menu.png","",0)
+        self.change_button_0.set_pos(864,50)
+        self.change_button_1 = Button(SCREEN,self.buttons_list,"images/unit_menu.png","",0)
+        self.change_button_1.set_pos(932,50)
+
+
 
         unit_counter = 1
         building_counter = 1
-        for button in self.buttons_list:
+        for button in self.buttons_list: # Assigns all buttons correct position on the hud.
             if isinstance(button,UnitButton):
                 if unit_counter%2 == 0:
-                    posx = 900
+                    posx = 944
                 else:
-                    posx = 870
-                posy = 10 + 40*(unit_counter//2)
+                    posx = 888
+                posy = 100 + 40*(unit_counter//2)
                 unit_counter+=1
                 button.set_pos(posx,posy)
             else:
                 if building_counter%2 == 0:
-                    posx=900
+                    posx = 944
                 else:
-                    posx = 870
-                posy = 10 + 40*(building_counter//2)
+                    posx = 888
+                posy = 100 + 100*((building_counter-1)//2)
                 building_counter+=1
                 button.set_pos(posx,posy)
 
@@ -50,8 +57,15 @@ class Hud():
 
         for button in self.buttons_list:
             if button.get_rect().collidepoint(mouse_x,mouse_y) and button.is_available():
+                pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),0) 
+                # Gets covered up by the update so will have to find workaround if I care enough
                 button.on_press()
                 break
+
+        if self.change_button_0.get_rect().collidepoint(mouse_x,mouse_y):
+            self.change_state(0)
+        if self.change_button_1.get_rect().collidepoint(mouse_x,mouse_y):
+            self.change_state(1)
 
     def change_state(self,input:int) -> None:
         if input == 0 or input == 1:
@@ -60,8 +74,10 @@ class Hud():
             pass
 
     def update(self):
-        pygame.draw.rect(self.SCREEN,(200,200,200),(868,0,232,640),0)
-        pygame.draw.rect(self.SCREEN,(150,160,170),(0,580,1000,64))
+        pygame.draw.rect(self.SCREEN,(200,200,200),(864,0,232,640),0)
+        pygame.draw.rect(self.SCREEN,(150,160,170),(0,576,1000,64))
+        self.SCREEN.blit(self.change_button_0.get_image(),self.change_button_0.get_rect())
+        self.SCREEN.blit(self.change_button_1.get_image(),self.change_button_1.get_rect())
 
         for button in self.buttons_list:
             if self.state == 0: #Building menu

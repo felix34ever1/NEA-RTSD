@@ -7,6 +7,7 @@
 import pygame
 
 
+
 class InputHandler():
 
     def __init__(self, unit_list, building_list, enemy_list):
@@ -43,13 +44,15 @@ class InputHandler():
         is_attack = False
         for enemy in self.enemy_list():
             if enemy.get_rect().collidepoint(pos_x,pos_y):
+                selected_enemy = enemy
                 is_attack = True
                 break
 
         if self.selection[0].isinstance(Building): # There is only one selection and it is a building, otherwise all selected are units
             if is_attack: # Buildings can only be ordered to attack.
                 if self.selection[0].isinstance(DefenceBuilding):
-                    self.selection[0].attack(enemy)
+                    if 'selected_enemy' in locals(): # If the variable is initialised in 
+                        self.selection[0].attack(selected_enemy)
         else: #Selection is composed of units
             if is_attack:
                 for unit in self.unit_list:
