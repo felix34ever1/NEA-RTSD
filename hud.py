@@ -5,8 +5,8 @@
 
 import pygame
 
+from buildingbutton import BuildingButton
 from unitbutton import UnitButton
-
 
 class Hud():
 
@@ -15,8 +15,29 @@ class Hud():
         self.building_list = building_list
         self.natural_building_list = natural_building_list
         self.SCREEN = SCREEN
-        self.buttons_list = [] # Buttons to be manually created
+        self.buttons_list = []
+        self.buttons_list = [BuildingButton(self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
         self.state = 0
+
+        unit_counter = 1
+        building_counter = 1
+        for button in self.buttons_list:
+            if isinstance(button,UnitButton):
+                if unit_counter%2 == 0:
+                    posx = 900
+                else:
+                    posx = 870
+                posy = 10 + 40*(unit_counter//2)
+                unit_counter+=1
+                button.set_pos(posx,posy)
+            else:
+                if building_counter%2 == 0:
+                    posx=900
+                else:
+                    posx = 870
+                posy = 10 + 40*(building_counter//2)
+                building_counter+=1
+                button.set_pos(posx,posy)
 
     #Getters & Setters
 
@@ -45,16 +66,18 @@ class Hud():
         for button in self.buttons_list:
             if self.state == 0: #Building menu
                 if button.is_available():
-                    if button.isinstance(BuildingButton):
-                        self.SCREEN.blit(button.get_rect(),button.get_pos())
+                    if isinstance(button,BuildingButton):
+                        self.SCREEN.blit(button.get_image(),button.get_rect())
             else:
                 if button.is_available():
-                    if button.isinstance(UnitButton):
-                        self.SCREEN.blit(button.get_rect(),button.get_pos())
+                    if isinstance(button,UnitButton):
+                        self.SCREEN.blit(button.get_image(),button.get_rect())
 
-            if button.isinstance(UnitButton): # Updates unit producing buttons to see if they're allowed to be active.
+            if isinstance(button,UnitButton): # Updates unit producing buttons to see if they're allowed to be active.
                 for building in self.building_list:
-                    if building.isinstance(UnitProducer):
+                    # if building.isinstance(UnitProducer):
+                    # Not implemented yet but when implemented, will be enabled
+
                         unit_list = building.get_units()
                         for unit in unit_list:
                             if unit == button.get_unit():

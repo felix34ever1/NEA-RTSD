@@ -14,7 +14,7 @@ class Button():
         self.availability = False
         self.exec_string = exec_string # Used as the command that creates a unit/building.
         self.cost = cost
-        self.pos = [0,0]
+        self.pos = [30,60]
         self.button_list = button_list
         
         self.rect = self.image.get_rect()
@@ -30,6 +30,13 @@ class Button():
     
     def get_image(self):
         return(self.image)
+
+    def get_pos(self):
+        return(self.pos)
+
+    def set_pos(self,x,y):
+        self.pos = [x,y]
+        self.rect.topleft = ((self.pos[0],self.pos[1]))
 
     # Other subroutines
 
