@@ -56,7 +56,7 @@ class InputHandler():
         else: #Selection is composed of units
             if is_attack:
                 for unit in self.unit_list:
-                    unit.attack(enemy):
+                    unit.attack(enemy)
             else:
                 for unit in self.unit_list:
                     unit.move_to(pos_x,pos_y)
