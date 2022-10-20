@@ -4,7 +4,7 @@ import random
 pygame.init()
 from hud import Hud
 from inputhandler import InputHandler
-from grid import Grid
+#from grid import Grid
 
 # Display settings
 WINDOW_WIDTH = 1000
@@ -13,7 +13,7 @@ SCREEN = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT))
 pygame.display.set_caption("RTSD")
 
 # Clock Settings
-fps = 60
+FPS = 60
 clock = pygame.time.Clock()
 
 # Lists defined
@@ -26,7 +26,7 @@ projectile_list = []
 # One time instances defined
 hud = Hud(building_list,natural_building_list,SCREEN) # Pylance error is not a problem
 inputHandler = InputHandler(unit_list,building_list,enemy_list)
-grid = Grid(SCREEN,[27,18])
+#grid = Grid(SCREEN,[27,18],natural_building_list)
 
 #Ingame trackers
 money = 100
@@ -106,4 +106,4 @@ while is_running:
     hud.update()
     pygame.display.update()
 
-    clock.tick(fps)
+    clock.tick(FPS)

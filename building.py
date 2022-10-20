@@ -39,5 +39,5 @@ class Building():
         self.SCREEN.blit(self.get_image(),self.get_rect())
 
     def on_death(self):
-        self.building_list.remove(self) 
+        self.building_list.remove(self)
         # Removing the only reference to itself will automatically clean it up from memory
