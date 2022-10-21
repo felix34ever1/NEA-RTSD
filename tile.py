@@ -14,6 +14,19 @@ class Tile():
         self.grid_coordinates = grid_coordinates
         self.movement_difficulty = 1
 
+    # Getters & Setters
+
+    def get_pos(self) -> list:
+        return([self.grid_coordinates[0]*32,self.grid_coordinates[1]*32])
+
+    def get_occupier(self) -> object:
+        return(self.occupier)
+
+    def is_occupied(self) -> bool:
+        return(self.occupied)
+
+    # Other subroutines
+
     def occupy(self, occupier: object=None):
         if occupier == None:
             self.movement_difficulty = 1
@@ -22,9 +35,3 @@ class Tile():
             self.movemment_difficulty = 50
             self.occupied = True
         self.occupier = occupier
-    
-    def get_pos(self) -> list:
-        return([self.grid_coordinates[0]*32,self.grid_coordinates[1]*32])
-
-    def get_occupier(self) -> object:
-        return(self.occupier)

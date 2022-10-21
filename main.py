@@ -4,7 +4,7 @@ import random
 pygame.init()
 from hud import Hud
 from inputhandler import InputHandler
-#from grid import Grid
+from grid import Grid
 
 # Display settings
 WINDOW_WIDTH = 1000
@@ -26,7 +26,7 @@ projectile_list = []
 # One time instances defined
 hud = Hud(building_list,natural_building_list,SCREEN) # Pylance error is not a problem
 inputHandler = InputHandler(unit_list,building_list,enemy_list)
-#grid = Grid(SCREEN,[27,18],natural_building_list)
+grid = Grid(SCREEN,[27,18],natural_building_list)
 
 #Ingame trackers
 money = 100
@@ -104,6 +104,12 @@ while is_running:
 
 
     hud.update()
+    for building in building_list:
+        building.update()
+    for building in natural_building_list:
+        building.update()
+    
     pygame.display.update()
+
 
     clock.tick(FPS)

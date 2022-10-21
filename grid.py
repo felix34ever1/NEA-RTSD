@@ -14,7 +14,7 @@ class Grid():
         self.SCREEN = SCREEN
         self.grid_dimensions = grid_dimensions
         self.tile_list = [] 
-        self.building_constructor_list = [(SCREEN,building_list,health = 10000)]
+        self.building_constructor_list = ['SCREEN,building_list,10000,"images/default.png"','SCREEN,building_list,10000,"images/boulder_0.png"','SCREEN,building_list,10000,"images/boulder_1.png"','SCREEN,building_list,10000,"images/boulder_2.png"','SCREEN,building_list,10000,"images/old_tower_0.png"','SCREEN,building_list,10000,"images/old_tower_1.png"']
         # List will be used to hold the tiles making up the world in a 2d list.
 
         for x in range(grid_dimensions[0]):
@@ -25,6 +25,8 @@ class Grid():
         for i in range(10):
             a = random.randint(0,26)
             b = random.randint(0,17)
-            if not (self.tile_list[a][b].isoccupied()):
+            if not (self.tile_list[a][b].is_occupied()):
                 # Add building to tile
-                pass
+                c = random.randint(0,len(self.building_constructor_list)-1)
+                self.tile_list[a][b].occupy(exec(f"Building({self.building_constructor_list[c]},[{a*32},{b*32}])"))
+                # Above code evaluates at run time allowing for the building attributes to be dynamically edited.

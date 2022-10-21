@@ -14,6 +14,7 @@ class Building():
         self.health = health
         self.image = pygame.image.load(image)
         self.pos = pos
+        self.building_list.append(self)
 
         self.rect = self.image.get_rect()
         self.rect.topleft = ((self.pos[0],self.pos[1]))
