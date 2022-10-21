@@ -44,6 +44,18 @@ while is_running:
 
     buttons_pressed = pygame.mouse.get_pressed()
     
+    for event in pygame.event.get():
+        
+        if event.type == pygame.QUIT:
+            is_running = False
+
+
+    hud.update()
+    for building in building_list:
+        building.update()
+    for building in natural_building_list:
+        building.update()
+    
     # LMB Logic
     if buttons_pressed[0] == True:
         if mouse_down == False:
@@ -96,19 +108,6 @@ while is_running:
         if mouse_x < 868 or mouse_y < 580: #If mouse position not in Hud:
             pass # Order
 
-
-    for event in pygame.event.get():
-        
-        if event.type == pygame.QUIT:
-            is_running = False
-
-
-    hud.update()
-    for building in building_list:
-        building.update()
-    for building in natural_building_list:
-        building.update()
-    
     pygame.display.update()
 
 

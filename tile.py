@@ -4,7 +4,7 @@
 #
 
 import pygame
-
+from building import Building
 
 class Tile():
 
@@ -22,16 +22,26 @@ class Tile():
     def get_occupier(self) -> object:
         return(self.occupier)
 
-    def is_occupied(self) -> bool:
+    def get_occupied(self) -> bool:
         return(self.occupied)
 
     # Other subroutines
 
-    def occupy(self, occupier: object=None):
-        if occupier == None:
-            self.movement_difficulty = 1
-            self.occupied = False
-        else:
-            self.movemment_difficulty = 50
-            self.occupied = True
-        self.occupier = occupier
+    def occupy(self, new_occupier: object=None):
+        if self.occupier == None: # If it's empty before being assigned:
+            if new_occupier == None:
+                self.movement_difficulty = 1
+                self.occupied = False
+            else:
+                self.movemment_difficulty = 50
+                self.occupied = True
+            self.occupier = new_occupier
+        else: # if not empty already:
+            self.occupier.on_death() # All buildings will have this method
+            if new_occupier == None:
+                self.movement_difficulty = 1
+                self.occupied = False
+            else:
+                self.movemment_difficulty = 50
+                self.occupied = True
+            self.occupier = new_occupier            

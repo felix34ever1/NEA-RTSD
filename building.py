@@ -8,11 +8,12 @@ import pygame
 
 class Building():
 
-    def __init__(self,SCREEN,building_list:list,health:int=100,image:str="images/default.png",pos:list=[0,0]):
+    def __init__(self,SCREEN,building_list:list,name: str,health:int=100,image:str="images/default.png",pos:list=[0,0]):
         self.SCREEN = SCREEN
         self.building_list = building_list
         self.health = health
         self.image = pygame.image.load(image)
+        self.name = name
         self.pos = pos
         self.building_list.append(self)
 
@@ -30,6 +31,9 @@ class Building():
 
     def get_rect(self):
         return(self.rect)
+    
+    def get_name(self):
+        return(self.name)
 
     # Other subroutines
 
