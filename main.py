@@ -1,5 +1,6 @@
 import pygame
 import random
+from building import Building
 
 pygame.init()
 from hud import Hud
@@ -27,6 +28,7 @@ projectile_list = []
 hud = Hud(building_list,natural_building_list,SCREEN) # Pylance error is not a problem
 inputHandler = InputHandler(unit_list,building_list,enemy_list)
 grid = Grid(SCREEN,[27,18],natural_building_list)
+grid.place_grid(Building(SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9])
 
 #Ingame trackers
 money = 100
@@ -40,7 +42,7 @@ mouse_x, mouse_y = 0,0
 is_running = True
 while is_running:
     
-    SCREEN.fill((250,250,250))
+    SCREEN.fill((178, 188, 170))
 
     buttons_pressed = pygame.mouse.get_pressed()
     

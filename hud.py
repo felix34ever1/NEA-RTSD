@@ -57,7 +57,7 @@ class Hud():
 
         for button in self.buttons_list:
             if button.get_rect().collidepoint(mouse_x,mouse_y) and button.is_available():
-                pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),0) 
+                pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),2) 
                 # Gets covered up by the update so will have to find workaround if I care enough
                 button.on_press()
                 break
