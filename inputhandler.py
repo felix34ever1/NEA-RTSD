@@ -5,21 +5,23 @@
 #
 
 import pygame
-
+from building import Building
 
 
 class InputHandler():
 
-    def __init__(self, unit_list, building_list, enemy_list):
+    def __init__(self, SCREEN, unit_list, building_list, enemy_list):
         self.selection = [] # Object storing all objects currently selected
         self.unit_list = unit_list
         self.building_list = building_list
         self.enemy_list = enemy_list
-
+        self.SCREEN = SCREEN
 
     def update(self):
-        pass 
-        # Possibly display all selected units with a box around them?
+        for entity in self.selection:
+            x,y = entity.get_pos()
+            pygame.draw.rect(self.SCREEN,(255,255,0),(x-4,y-4,40,40),2)
+        # Displays box around all selected things
 
     def box_select(self,pos_x,pos_y,next_pos_x,next_pos_y): # Selects all units in a rectangle shaped area defined by two coordinates. Buildings don't get selected like this. 
         self.selection = [] # Clears the selection first
