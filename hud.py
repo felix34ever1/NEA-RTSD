@@ -11,18 +11,23 @@ from button import Button
 
 class Hud():
 
-    def __init__(self, building_list: list, natural_building_list: list, SCREEN: pygame.Surface):
+    def __init__(self,building_list: list, natural_building_list: list, SCREEN: pygame.Surface):
         
         self.building_list = building_list
         self.natural_building_list = natural_building_list
         self.SCREEN = SCREEN
         self.buttons_list = []
-        self.buttons_list = [BuildingButton(self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
+        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/default.png","Building(self.SCREEN,[],'temp',10000,'images/green_blueprint.png',[0,0])"),BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
         self.state = 0
-        self.change_button_0 = Button(SCREEN,self.buttons_list,"images/building_menu.png","",0)
+        self.change_button_0 = Button(self,SCREEN,self.buttons_list,"images/building_menu.png","",0)
         self.change_button_0.set_pos(864,50)
-        self.change_button_1 = Button(SCREEN,self.buttons_list,"images/unit_menu.png","",0)
+        self.change_button_1 = Button(self,SCREEN,self.buttons_list,"images/unit_menu.png","",0)
         self.change_button_1.set_pos(932,50)
+        self.grid = None
+
+        self.building_string = ""
+        self.is_building = False
+        # Used for placing down buildings. Stores the building creation code and whether a building is selected.
 
 
 
@@ -51,6 +56,21 @@ class Hud():
     def get_buttons_list(self) -> list:
         return self.buttons_list
 
+    def get_is_building(self) -> bool:
+        return self.is_building
+
+    def get_building_string(self):
+        return self.building_string
+
+
+    def set_building_string(self,string):
+        self.building_string = string
+    
+    def set_is_building(self,value:bool):
+        self.is_building = value
+
+    def set_grid(self,grid):
+        self.grid = grid
     # Other subroutines
 
     def on_press(self,mouse_x: int,mouse_y: int) -> None:
@@ -58,7 +78,6 @@ class Hud():
         for button in self.buttons_list:
             if button.get_rect().collidepoint(mouse_x,mouse_y) and button.is_available():
                 pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),2) 
-                # Gets covered up by the update so will have to find workaround if I care enough
                 button.on_press()
                 break
 
@@ -80,12 +99,12 @@ class Hud():
         self.SCREEN.blit(self.change_button_1.get_image(),self.change_button_1.get_rect())
 
         for button in self.buttons_list:
-            if self.state == 0: #Building menu
+            if self.state == 0: # Building menu
                 if button.is_available():
                     if isinstance(button,BuildingButton):
                         self.SCREEN.blit(button.get_image(),button.get_rect())
-            else:
-                if button.is_available():
+            else: # Unit menu
+                if button.is_available(): 
                     if isinstance(button,UnitButton):
                         self.SCREEN.blit(button.get_image(),button.get_rect())
 
@@ -101,3 +120,6 @@ class Hud():
                                 button.set_spawn_pos(x,y)
                                 break
             
+        if self.is_building:
+            # Display building hologram code
+            pass

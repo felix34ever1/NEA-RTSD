@@ -10,17 +10,34 @@ from building import Building
 
 class InputHandler():
 
-    def __init__(self, SCREEN, unit_list, building_list, enemy_list):
+    def __init__(self, SCREEN,hud, unit_list, building_list, enemy_list):
         self.selection = [] # Object storing all objects currently selected
         self.unit_list = unit_list
         self.building_list = building_list
         self.enemy_list = enemy_list
         self.SCREEN = SCREEN
+        self.hud = hud
+        self.grid = None
+        self.green_building = Building(self.SCREEN,[],"temp",1000,"images/green_blueprint.png")
+        self.red_building = Building(self.SCREEN,[],"temp",1000,"images/red_blueprint.png")
+
+    def set_grid(self,grid):
+        self.grid = grid
 
     def update(self):
         for entity in self.selection:
             x,y = entity.get_pos()
             pygame.draw.rect(self.SCREEN,(255,255,0),(x-4,y-4,40,40),2)
+        if self.hud.get_is_building():
+            pos_x, pos_y = pygame.mouse.get_pos()
+            if pos_x < 864 and pos_y<576:
+                if self.grid.get_grid(pos_x,pos_y).get_occupied():
+                    self.red_building.set_pos(((pos_x//32)*32),((pos_y//32)*32))
+                    self.red_building.update()
+                else:
+                    self.green_building.set_pos(((pos_x//32)*32),((pos_y//32)*32))
+                    self.green_building.update()
+
         # Displays box around all selected things
 
     def box_select(self,pos_x,pos_y,next_pos_x,next_pos_y): # Selects all units in a rectangle shaped area defined by two coordinates. Buildings don't get selected like this. 
@@ -37,31 +54,37 @@ class InputHandler():
             if unit.get_rect().collidepoint(pos_x,pos_y):
                 self.selection.append(unit)
                 return
+        # If is building:
         for building in self.building_list:
-            if building.get_rect().collidepoint(pos_x,pos_y):
-                self.selection.append(building)
-                return
+                if building.get_rect().collidepoint(pos_x,pos_y):
+                    self.selection.append(building)
+                    return
+                
+        # If is building:
 
     def order(self,pos_x,pos_y):
+        if self.hud.get_is_building():
+            self.hud.set_is_building(False)
         is_attack = False
-        for enemy in self.enemy_list():
+        for enemy in self.enemy_list:
             if enemy.get_rect().collidepoint(pos_x,pos_y):
                 selected_enemy = enemy
                 is_attack = True
                 break
+        
+        if len(self.selection)>0:
+            if self.selection[0].isinstance(Building): # There is only one selection and it is a building, otherwise all selected are units
+                if is_attack: # Buildings can only be ordered to attack.
+                    if self.selection[0].isinstance(DefenceBuilding):
+                        if 'selected_enemy' in locals(): # If the variable is initialised in 
+                            self.selection[0].attack(selected_enemy)
+            else: #Selection is composed of units
+                if is_attack:
+                    for unit in self.unit_list:
+                        unit.attack(enemy)
+                else:
+                    for unit in self.unit_list:
+                        unit.move_to(pos_x,pos_y)
 
-        if self.selection[0].isinstance(Building): # There is only one selection and it is a building, otherwise all selected are units
-            if is_attack: # Buildings can only be ordered to attack.
-                if self.selection[0].isinstance(DefenceBuilding):
-                    if 'selected_enemy' in locals(): # If the variable is initialised in 
-                        self.selection[0].attack(selected_enemy)
-        else: #Selection is composed of units
-            if is_attack:
-                for unit in self.unit_list:
-                    unit.attack(enemy)
-            else:
-                for unit in self.unit_list:
-                    unit.move_to(pos_x,pos_y)
-    
     def deselect(self):
         self.selection = []

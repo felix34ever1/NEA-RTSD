@@ -3,6 +3,7 @@
 # 
 #
 
+import math
 import pygame
 from tile import Tile
 from building import Building
@@ -48,3 +49,10 @@ class Grid():
 
     def place_grid(self,item:object,pos:list=[0,0]):
         self.tile_list[pos[0]][pos[1]].occupy(item)
+
+    def place_pixel(self,item:object,pos:list=[0,0]):
+        pos = [pos[0]//32,pos[1]//32]
+        self.tile_list[pos[0]][pos[1]].occupy(item)
+
+    def get_grid(self,pos_x,pos_y)->None:
+        return self.tile_list[pos_x//32][pos_y//32]

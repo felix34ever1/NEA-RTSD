@@ -35,6 +35,9 @@ class Building():
     def get_name(self):
         return(self.name)
 
+    def set_pos(self,x,y):
+        self.pos = [x,y]
+        self.rect.topleft = ((self.pos[0],self.pos[1]))
     # Other subroutines
 
     def reduce_health(self,number:int):

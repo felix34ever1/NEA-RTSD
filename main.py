@@ -26,9 +26,11 @@ projectile_list = []
 
 # One time instances defined
 hud = Hud(building_list,natural_building_list,SCREEN) # Pylance error is not a problem
-inputHandler = InputHandler(SCREEN,unit_list,building_list,enemy_list)
+inputHandler = InputHandler(SCREEN,hud,unit_list,building_list,enemy_list)
 grid = Grid(SCREEN,[27,18],natural_building_list)
 grid.place_grid(Building(SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9])
+hud.set_grid(grid)
+inputHandler.set_grid(grid)
 
 #Ingame trackers
 money = 100
@@ -108,10 +110,9 @@ while is_running:
             down_length = 0
 
     # RMB Logic
-    if buttons_pressed[1] == True:
+    if buttons_pressed[2] == True:
         if mouse_x < 868 or mouse_y < 580: #If mouse position not in Hud:
-            pass # Order
-
+            inputHandler.order(mouse_x,mouse_y)
     
     inputHandler.update()
     pygame.display.update()

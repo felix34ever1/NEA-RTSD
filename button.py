@@ -8,7 +8,7 @@ import pygame
 
 class Button():
 
-    def __init__(self,SCREEN:pygame.Surface ,button_list: list, image: str="images/default.png", exec_string: str="",cost:int=1):
+    def __init__(self,hud,SCREEN:pygame.Surface ,button_list: list, image: str="images/default.png", exec_string: str="",cost:int=1):
         self.SCREEN = SCREEN
         self.image = pygame.image.load(image)
         self.availability = True
@@ -16,7 +16,8 @@ class Button():
         self.cost = cost
         self.pos = [30,60]
         self.button_list = button_list
-        
+        self.hud = hud
+
         self.rect = self.image.get_rect()
         self.rect.topleft = ((self.pos[0],self.pos[1]))
 
@@ -41,6 +42,5 @@ class Button():
     # Other subroutines
 
     def on_press(self):
-        
         pass
 
