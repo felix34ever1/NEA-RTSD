@@ -17,7 +17,7 @@ class Hud():
         self.natural_building_list = natural_building_list
         self.SCREEN = SCREEN
         self.buttons_list = []
-        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/default.png","Building(self.SCREEN,[],'temp',10000,'images/green_blueprint.png',[0,0])"),BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
+        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/default.png","Building(self.SCREEN,self.building_list,'temp',10000,'images/green_blueprint.png',[0,0])"),BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list),BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list)] # Buttons to be manually created
         self.state = 0
         self.change_button_0 = Button(self,SCREEN,self.buttons_list,"images/building_menu.png","",0)
         self.change_button_0.set_pos(864,50)
