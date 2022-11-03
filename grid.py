@@ -15,7 +15,14 @@ class Grid():
         self.SCREEN = SCREEN
         self.grid_dimensions = grid_dimensions
         self.tile_list = [] 
-        building_constructor_list = ['SCREEN,building_list,"Terrain",10000,"images/boulder_0.png"','SCREEN,building_list,"Terrain",10000,"images/boulder_1.png"','SCREEN,building_list,"Terrain",10000,"images/boulder_2.png"','SCREEN,building_list,"Terrain",10000,"images/old_tower_0.png"','SCREEN,building_list,"Terrain",10000,"images/old_tower_1.png"']
+        building_constructor_list = ['SCREEN,building_list,"Terrain",10000,"images/boulder_0.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/boulder_1.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/boulder_2.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/old_tower_0.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/old_tower_1.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/rubble_0.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/rubble_1.png"',
+        'SCREEN,building_list,"Terrain",10000,"images/rubble_2.png"']
         # List will be used to hold the tiles making up the world in a 2d list.
         economy_constructor_list = ['SCREEN,building_list,"Mine",10000,"images/mine_0.png"','SCREEN,building_list,"Mine",10000,"images/mine_1.png"']
 
@@ -38,7 +45,7 @@ class Grid():
 
             
         # Generate terrain blockers
-        for i in range(40):
+        for i in range(random.randint(20,60)):
             a = random.randint(0,26)
             b = random.randint(0,17)
             if not(self.tile_list[a][b].get_occupied()):

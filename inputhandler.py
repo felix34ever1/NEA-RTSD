@@ -64,12 +64,14 @@ class InputHandler():
                 
         # If the hud is building.
         if self.hud.get_is_building():
-            if not(self.grid.get_grid(pos_x,pos_y).get_occupied()):
+            if not(self.grid.get_grid(pos_x,pos_y).get_occupied()) and (self.hud.get_money()-self.hud.get_building_button().get_cost()>=0) :
+                # Checks if the tile is occupied and that there is enough money to perform the transaction.
                 exec_string = self.hud.get_building_string()
                 exec("self.building ="+exec_string)
                 self.building.set_pos((pos_x//32)*32,(pos_y//32)*32)
                 self.grid.place_grid(self.building,[pos_x//32,pos_y//32])
                 self.hud.set_is_building(False)
+                self.hud.sub_money(self.hud.get_building_button().get_cost())
 
 
     def order(self,pos_x,pos_y):

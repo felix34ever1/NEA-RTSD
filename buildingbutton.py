@@ -15,8 +15,12 @@ class BuildingButton(Button):
     
     def is_available(self):
         return(True) # Building buttons should always be visible
+
+    def get_cost(self):
+        return(self.cost)
         
     def on_press(self):
         self.hud.set_building_string(self.exec_string)
         self.hud.set_is_building(True)
+        self.hud.set_building_button(self)
         
