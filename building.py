@@ -42,6 +42,8 @@ class Building():
 
     def reduce_health(self,number:int):
         self.health-=number
+        if self.health < 1:
+            self.on_death()
 
     def update(self):
         self.SCREEN.blit(self.get_image(),self.get_rect())

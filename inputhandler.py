@@ -6,14 +6,18 @@
 
 import pygame
 from building import Building
+from economybuilding import EconomyBuilding
+from defencebuilding import DefenceBuilding
 
 
 class InputHandler():
 
-    def __init__(self, SCREEN,hud, unit_list, building_list, enemy_list):
+    def __init__(self, SCREEN,hud, unit_list, building_list,natural_building_list, enemy_list, projectile_list):
         self.selection = [] # Object storing all objects currently selected
         self.unit_list = unit_list
         self.building_list = building_list
+        self.natural_building_list = natural_building_list
+        self.projectile_list = projectile_list
         self.enemy_list = enemy_list
         self.SCREEN = SCREEN
         self.hud = hud

@@ -54,6 +54,13 @@ class Grid():
                 exec(f"self.tile_list[{a}][{b}].occupy(Building({building_constructor_list[c]},[{a*32},{b*32}]))")
                 # Above code evaluates at run time allowing for the building attributes to be dynamically edited.
 
+    # Getters and Setters
+
+    def get_tile_list(self)->list:
+        return self.tile_list
+
+    # Other subroutines
+
     def place_grid(self,item:object,pos:list=[0,0]):
         self.tile_list[pos[0]][pos[1]].occupy(item)
 

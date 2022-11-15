@@ -8,6 +8,8 @@ import pygame
 from buildingbutton import BuildingButton
 from unitbutton import UnitButton
 from button import Button
+from unitbuilding import UnitBuilding
+from defencebuilding import DefenceBuilding
 
 class Hud():
 
@@ -17,9 +19,10 @@ class Hud():
         self.natural_building_list = natural_building_list
         self.SCREEN = SCREEN
         self.buttons_list = []
-        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/ore_smelter.png","Building(self.SCREEN,self.building_list,'smeltry',150,'images/ore_smelter.png',[0,0])"),
+        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/ore_smelter.png","EconomyBuilding(self.SCREEN,self.building_list,'smeltry',self.grid,self.hud,self.natural_building_list,150,'images/ore_smelter.png',[0,0])"),
         BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/barracks.png","Building(self.SCREEN,self.building_list,'barracks',50,'images/barracks.png',[0,0])"),
-        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","Building(self.SCREEN,self.building_list,'defence',100,'images/defence_tower.png',[0,0])")] # Buttons to be manually created
+        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","DefenceBuilding(self.hud,'tower',100,self.SCREEN,self.building_list,'images/defence_tower.png',self.natural_building_list,self.enemy_list,96,self.projectile_list,[0,0],2,3,'images/bullet_0.png',1000000)"),
+        UnitButton(self,self.SCREEN,self.buttons_list,self.building_list,"barracks","soldier")] # Buttons to be manually created
         self.state = 0
         self.change_button_0 = Button(self,SCREEN,self.buttons_list,"images/building_menu.png","",0)
         self.change_button_0.set_pos(864,50)
@@ -97,10 +100,18 @@ class Hud():
     def on_press(self,mouse_x: int,mouse_y: int) -> None:
 
         for button in self.buttons_list:
-            if button.get_rect().collidepoint(mouse_x,mouse_y) and button.is_available():
-                pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),2) 
-                button.on_press()
-                break
+            if self.state == 0: # Checks if should check for BuildingButton or UnitButton 
+                if isinstance(button,BuildingButton):
+                    if button.get_rect().collidepoint(mouse_x,mouse_y) and button.is_available():
+                        pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),2) 
+                        button.on_press()
+                        break
+            else:
+                if isinstance(button,UnitButton):
+                    if button.get_rect().collidepoint(mouse_x,mouse_y) and button.is_available():
+                        pygame.draw.rect(self.SCREEN,(0,255,0),(button.get_pos()[0]-4,button.get_pos()[1]-4,40,40),2) 
+                        button.on_press()
+                        break
 
         if self.change_button_0.get_rect().collidepoint(mouse_x,mouse_y):
             self.change_state(0)
@@ -131,14 +142,13 @@ class Hud():
 
             if isinstance(button,UnitButton): # Updates unit producing buttons to see if they're allowed to be active.
                 for building in self.building_list:
-                    # if building.isinstance(UnitProducer):
-                    # Not implemented yet but when implemented, will be enabled
+                    if isinstance(building,UnitBuilding):
 
-                        unit_list = building.get_units()
+                        unit_list = building.get_unit_list()
                         for unit in unit_list:
-                            if unit == button.get_unit():
-                                x, y = building.get_pos()[0].building.get_pos[1]
-                                button.set_spawn_pos(x,y)
+                            if unit == button.get_unit_name():
+                                x, y = building.get_pos()
+                                button.set_spawn_point([x,y])
                                 break
         a = self.font.render(f"Funds: {self.money}",False,(140,147,168))
         self.SCREEN.blit(a,(870,30))
