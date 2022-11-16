@@ -79,6 +79,7 @@ class InputHandler():
 
 
     def order(self,pos_x,pos_y):
+        print(pos_x,pos_y)
         if self.hud.get_is_building():
             self.hud.set_is_building(False)
         is_attack = False
@@ -96,11 +97,11 @@ class InputHandler():
                             self.selection[0].attack(selected_enemy)
             else: #Selection is composed of units
                 if is_attack:
-                    for unit in self.unit_list:
+                    for unit in self.selection:
                         unit.attack(enemy)
                 else:
-                    for unit in self.unit_list:
-                        unit.move_to(pos_x,pos_y)
+                    for unit in self.selection:
+                        unit.move_to([pos_x,pos_y])
 
     def deselect(self):
         self.selection = []

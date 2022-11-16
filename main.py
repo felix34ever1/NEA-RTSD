@@ -7,6 +7,7 @@ from hud import Hud
 from inputhandler import InputHandler
 from grid import Grid
 from projectile import Projectile
+from unit import Unit
 
 # Display settings
 WINDOW_WIDTH = 1000
@@ -32,6 +33,11 @@ grid = Grid(SCREEN,[27,18],natural_building_list)
 grid.place_grid(Building(SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9])
 hud.set_grid(grid)
 inputHandler.set_grid(grid)
+
+# Debugging
+Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/default.png",1,[30,300])
+Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/default.png",1,[50,300])
+Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/default.png",1,[100,200])
 
 #Mouse Tracking variables
 mouse_down = False
@@ -60,6 +66,8 @@ while is_running:
         building.update()
     for projectile in projectile_list:
         projectile.update()
+    for unit in unit_list:
+        unit.update()
     
     # LMB Logic
     if buttons_pressed[0] == True:
@@ -112,7 +120,8 @@ while is_running:
 
     # RMB Logic
     if buttons_pressed[2] == True:
-        if mouse_x < 868 or mouse_y < 580: #If mouse position not in Hud:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if mouse_x < 868 and mouse_y < 580: #If mouse position not in Hud:
             inputHandler.order(mouse_x,mouse_y)
     
     inputHandler.update()
