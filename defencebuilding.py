@@ -12,8 +12,8 @@ from projectile import Projectile
 
 class DefenceBuilding(Building):
 
-    def __init__(self,hud,name,health,SCREEN,building_list,image,natural_building_list,enemy_list,range:int,projectile_list,pos: list=[0,0],rof = 1,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1):
-        super().__init__(SCREEN,building_list,name,health,image,pos)
+    def __init__(self,grid,name,health,SCREEN,building_list,image,natural_building_list,enemy_list,range:int,projectile_list,pos: list=[0,0],rof = 1,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1):
+        super().__init__(grid,SCREEN,building_list,name,health,image,pos)
         
         # Variable assignment
         self.natural_building_list = natural_building_list

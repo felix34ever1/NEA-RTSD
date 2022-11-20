@@ -8,7 +8,7 @@ import pygame
 
 class Building():
 
-    def __init__(self,SCREEN,building_list:list,name: str,health:int=100,image:str="images/default.png",pos:list=[0,0]):
+    def __init__(self,grid,SCREEN,building_list:list,name: str,health:int=100,image:str="images/default.png",pos:list=[0,0]):
         self.SCREEN = SCREEN
         self.building_list = building_list
         self.health = health
@@ -49,5 +49,6 @@ class Building():
         self.SCREEN.blit(self.get_image(),self.get_rect())
 
     def on_death(self):
+        self.
         self.building_list.remove(self)
         # Removing the only reference to itself will automatically clean it up from memory
