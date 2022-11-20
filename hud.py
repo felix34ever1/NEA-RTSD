@@ -8,8 +8,10 @@ import pygame
 from buildingbutton import BuildingButton
 from unitbutton import UnitButton
 from button import Button
+from building import Building
 from unitbuilding import UnitBuilding
 from defencebuilding import DefenceBuilding
+from economybuilding import EconomyBuilding
 
 class Hud():
 
@@ -20,8 +22,8 @@ class Hud():
         self.SCREEN = SCREEN
         self.buttons_list = []
         self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/ore_smelter.png","EconomyBuilding(self.SCREEN,self.building_list,'smeltry',self.grid,self.hud,self.natural_building_list,150,'images/ore_smelter.png',[0,0])"),
-        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/barracks.png","Building(self.SCREEN,self.building_list,'barracks',50,'images/barracks.png',[0,0])"),
-        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","DefenceBuilding(self.hud,'tower',100,self.SCREEN,self.building_list,'images/defence_tower.png',self.natural_building_list,self.enemy_list,96,self.projectile_list,[0,0],2,3,'images/bullet_0.png',1000000)"),
+        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/barracks.png","UnitBuilding(self.grid,self.SCREEN,self.building_list,'barracks',100,'images/barracks.png',[0,0],'')"),
+        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","DefenceBuilding(self.grid,'tower',100,self.SCREEN,self.building_list,'images/defence_tower.png',self.natural_building_list,self.enemy_list,96,self.projectile_list,[0,0],2,3,'images/bullet_0.png',1000000)"),
         UnitButton(self,self.SCREEN,self.buttons_list,self.building_list,"barracks","soldier")] # Buttons to be manually created
         self.state = 0
         self.change_button_0 = Button(self,SCREEN,self.buttons_list,"images/building_menu.png","",0)

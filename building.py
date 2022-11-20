@@ -16,6 +16,7 @@ class Building():
         self.name = name
         self.pos = pos
         self.building_list.append(self)
+        self.grid = grid
 
         self.rect = self.image.get_rect()
         self.rect.topleft = ((self.pos[0],self.pos[1]))
@@ -34,6 +35,9 @@ class Building():
     
     def get_name(self):
         return(self.name)
+    
+    def get_health(self):
+        return(self.health)
 
     def set_pos(self,x,y):
         self.pos = [x,y]
@@ -49,6 +53,6 @@ class Building():
         self.SCREEN.blit(self.get_image(),self.get_rect())
 
     def on_death(self):
-        self.
+        self.grid.get_grid(self.pos[0],self.pos[1]).occupy(None)
         self.building_list.remove(self)
         # Removing the only reference to itself will automatically clean it up from memory

@@ -8,11 +8,12 @@ import pygame
 from building import Building
 from economybuilding import EconomyBuilding
 from defencebuilding import DefenceBuilding
+from unitbuilding import UnitBuilding
 
 
 class InputHandler():
 
-    def __init__(self, SCREEN,hud, unit_list, building_list,natural_building_list, enemy_list, projectile_list):
+    def __init__(self, grid,SCREEN,hud, unit_list, building_list,natural_building_list, enemy_list, projectile_list):
         self.selection = [] # Object storing all objects currently selected
         self.unit_list = unit_list
         self.building_list = building_list
@@ -21,10 +22,11 @@ class InputHandler():
         self.enemy_list = enemy_list
         self.SCREEN = SCREEN
         self.hud = hud
+        self.grid = grid
         self.grid = None
-        self.green_building = Building(self.SCREEN,[],"temp",1000,"images/green_blueprint.png")
-        self.red_building = Building(self.SCREEN,[],"temp",1000,"images/red_blueprint.png")
-        self.building = Building(self.SCREEN,[],"debug",1000,"images/default2.png") 
+        self.green_building = Building(self.grid,self.SCREEN,[],"temp",1000,"images/green_blueprint.png")
+        self.red_building = Building(self.grid,self.SCREEN,[],"temp",1000,"images/red_blueprint.png")
+        self.building = Building(self.grid,self.SCREEN,[],"debug",1000,"images/default2.png") 
         # This specific building should be replaced immediately but its just a placeholder
 
     def set_grid(self,grid):
@@ -79,7 +81,6 @@ class InputHandler():
 
 
     def order(self,pos_x,pos_y):
-        print(pos_x,pos_y)
         if self.hud.get_is_building():
             self.hud.set_is_building(False)
         is_attack = False

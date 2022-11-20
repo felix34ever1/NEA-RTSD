@@ -37,7 +37,6 @@ class Tile():
                 self.occupied = True
             self.occupier = new_occupier
         else: # if not empty already:
-            self.occupier.on_death() # All buildings will have this method
             if new_occupier == None:
                 self.movement_difficulty = 1
                 self.occupied = False

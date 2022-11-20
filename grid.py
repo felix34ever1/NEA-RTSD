@@ -15,16 +15,16 @@ class Grid():
         self.SCREEN = SCREEN
         self.grid_dimensions = grid_dimensions
         self.tile_list = [] 
-        building_constructor_list = ['SCREEN,building_list,"Terrain",10000,"images/boulder_0.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/boulder_1.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/boulder_2.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/old_tower_0.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/old_tower_1.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/rubble_0.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/rubble_1.png"',
-        'SCREEN,building_list,"Terrain",10000,"images/rubble_2.png"']
+        building_constructor_list = ['self,SCREEN,building_list,"Terrain",10000,"images/boulder_0.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/boulder_1.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/boulder_2.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/old_tower_0.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/old_tower_1.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/rubble_0.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/rubble_1.png"',
+        'self,SCREEN,building_list,"Terrain",10000,"images/rubble_2.png"']
         # List will be used to hold the tiles making up the world in a 2d list.
-        economy_constructor_list = ['SCREEN,building_list,"Mine",10000,"images/mine_0.png"','SCREEN,building_list,"Mine",10000,"images/mine_1.png"']
+        economy_constructor_list = ['self,SCREEN,building_list,"Mine",10000,"images/mine_0.png"','self,SCREEN,building_list,"Mine",10000,"images/mine_1.png"']
 
         for x in range(grid_dimensions[0]):
             self.tile_list.append([])

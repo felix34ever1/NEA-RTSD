@@ -12,13 +12,13 @@ from projectile import Projectile
 
 class DefenceBuilding(Building):
 
-    def __init__(self,grid,name,health,SCREEN,building_list,image,natural_building_list,enemy_list,range:int,projectile_list,pos: list=[0,0],rof = 1,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1):
+    def __init__(self,grid,name,health,SCREEN,building_list,image,natural_building_list,enemy_list,maxdistance:int,projectile_list,pos: list=[0,0],rof = 1,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1):
         super().__init__(grid,SCREEN,building_list,name,health,image,pos)
         
         # Variable assignment
         self.natural_building_list = natural_building_list
         self.enemy_list = enemy_list
-        self.range = range
+        self.range = maxdistance
         self.projectile_list = projectile_list
         self.rof = rof
         self.time_period = int(1000/self.rof)
@@ -38,22 +38,14 @@ class DefenceBuilding(Building):
             closest_distance = 0
             for enemy in self.enemy_list:
                 enemyx,enemyy = enemy.get_pos()
-                distance = math.sqrt((enemyx-self.pos[0])^2-(enemyy-self.pos[1]))
+                distance = math.sqrt(math.pow((enemyx-self.pos[0]),2)+math.pow((enemyy-self.pos[1]),2))
                 if closest_distance < self.range or closest_enemy == None: # Checks if the unit is the closest enemy unit.
                     closest_enemy = enemy
                     closest_distance = distance
-            if closest_enemy != None:
+            if closest_enemy != None and closest_distance < self.range:
                 self.projectile_list.append(Projectile(self.SCREEN,self.pos,self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,[enemyx,enemyy]))
-            mouse_x,mouse_y = pygame.mouse.get_pos()
-            try:
-                distance = math.sqrt((math.pow((mouse_x-self.pos[0]),2)+math.pow((mouse_y-self.pos[1]),2)))
                 self.time_period = int(1000/self.rof)
-            except:
-                pass
-            else:
-                if distance < self.range:
-                    self.projectile_list.append(Projectile(self.SCREEN,[self.pos[0]+16,self.pos[1]+16],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,[mouse_x,mouse_y]))
-                    self.time_period = int(1000/self.rof)
+
 
 
         self.SCREEN.blit(self.get_image(),self.get_rect())

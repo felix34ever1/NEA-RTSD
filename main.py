@@ -27,17 +27,19 @@ natural_building_list = []
 projectile_list = []
 
 # One time instances defined
-hud = Hud(building_list,natural_building_list,SCREEN) # Pylance error is not a problem
-inputHandler = InputHandler(SCREEN,hud,unit_list,building_list,natural_building_list,enemy_list,projectile_list)
-grid = Grid(SCREEN,[27,18],natural_building_list)
-grid.place_grid(Building(SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9])
+hud = Hud(building_list,natural_building_list,SCREEN) # type: ignore 
+grid = Grid(SCREEN,[27,18],natural_building_list)  # type: ignore
+grid.place_grid(Building(grid,SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9])
+inputHandler = InputHandler(grid,SCREEN,hud,unit_list,building_list,natural_building_list,enemy_list,projectile_list)
+
 hud.set_grid(grid)
 inputHandler.set_grid(grid)
 
 # Debugging
-Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/default.png",1,[30,300])
-Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/default.png",1,[50,300])
-Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/default.png",1,[100,200])
+Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/bullet_0.png",1,[30,300],"images/default.png",180)
+Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/bullet_0.png",1,[50,300])
+Unit(SCREEN,"test",3,unit_list,enemy_list,natural_building_list,projectile_list,10,"images/bullet_0.png",1,[100,200])
+Unit(SCREEN,"enemytest",3,enemy_list,unit_list,natural_building_list,projectile_list,10,"images/bullet_0.png",1,[600,400],"images/default2.png")
 
 #Mouse Tracking variables
 mouse_down = False
@@ -68,6 +70,8 @@ while is_running:
         projectile.update()
     for unit in unit_list:
         unit.update()
+    for enemy in enemy_list:
+        enemy.update()
     
     # LMB Logic
     if buttons_pressed[0] == True:

@@ -61,8 +61,11 @@ class Projectile():
         return(self.rect)
 
     def on_death(self):
-        self.projectile_list.remove(self)
+        try:
+            self.projectile_list.remove(self)
         # Removing the only reference to itself will automatically clean it up from memory
+        except:
+            pass
 
     def update(self):
         self.pos = [self.pos[0]+self.speed_x,self.pos[1]+self.speed_y]
