@@ -11,7 +11,7 @@ from building import Building
 
 class Unit():
 
-    def __init__(self,SCREEN,name:str,health:int,unit_list:list,enemy_list:list,natural_building_list:list,projectile_list:list,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1,pos:list=[0,0],image:str="images/default.png",maxdistance:int=64,rof:int=1,speed:int=5):
+    def __init__(self,SCREEN,name:str,health:int,unit_list:list,enemy_list:list,natural_building_list:list,projectile_list:list,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1,image:str="images/default.png",maxdistance:int=64,rof:int=1,speed:int=5,pos:list=[0,0]):
         self.name = name
         self.SCREEN = SCREEN
         self.health = health

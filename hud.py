@@ -12,19 +12,24 @@ from building import Building
 from unitbuilding import UnitBuilding
 from defencebuilding import DefenceBuilding
 from economybuilding import EconomyBuilding
+from unit import Unit
 
 class Hud():
 
-    def __init__(self,building_list: list, natural_building_list: list, SCREEN: pygame.Surface):
+    def __init__(self,building_list: list, natural_building_list: list, SCREEN: pygame.Surface,unit_list,projectile_list,enemy_list):
         
         self.building_list = building_list
         self.natural_building_list = natural_building_list
+        self.unit_list = unit_list
+        self.projectile_list = projectile_list
+        self.enemy_list = enemy_list
         self.SCREEN = SCREEN
         self.buttons_list = []
         self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/ore_smelter.png","EconomyBuilding(self.SCREEN,self.building_list,'smeltry',self.grid,self.hud,self.natural_building_list,150,'images/ore_smelter.png',[0,0])"),
         BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/barracks.png","UnitBuilding(self.grid,self.SCREEN,self.building_list,'barracks',100,'images/barracks.png',[0,0],'')"),
         BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","DefenceBuilding(self.grid,'tower',100,self.SCREEN,self.building_list,'images/defence_tower.png',self.natural_building_list,self.enemy_list,96,self.projectile_list,[0,0],2,3,'images/bullet_0.png',1000000)"),
-        UnitButton(self,self.SCREEN,self.buttons_list,self.building_list,"barracks","soldier")] # Buttons to be manually created
+        UnitButton(self,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"barracks","soldier","images/default.png","Unit(self.SCREEN,'soldier',10,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,10,'images/bullet_0.png',5,'images/default.png',100,2,2,")] # Buttons to be manually created
+        
         self.state = 0
         self.change_button_0 = Button(self,SCREEN,self.buttons_list,"images/building_menu.png","",0)
         self.change_button_0.set_pos(864,50)
