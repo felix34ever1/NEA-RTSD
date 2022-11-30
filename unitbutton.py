@@ -10,9 +10,10 @@ from unit import Unit
 
 class UnitButton(Button):
 
-    def __init__(self,hud,SCREEN:pygame.Surface ,unit_list,projectile_list,enemy_list,button_list: list,building_list:list, natural_building_list, building_name: str,unit_name:str, image: str="images/default.png", exec_string: str="",cost:int=1):
+    def __init__(self,hud,grid,SCREEN:pygame.Surface ,unit_list,projectile_list,enemy_list,button_list: list,building_list:list, natural_building_list, building_name: str,unit_name:str, image: str="images/default.png", exec_string: str="",cost:int=1):
         super().__init__(hud,SCREEN,button_list,image,exec_string,cost)
         self.building_list = building_list
+        self.grid = grid
         self.natural_building_list = natural_building_list
         self.building_name = building_name # Building that the button searches for to spawn units at
         self.building_position = [0,0] # Spawn point for unit

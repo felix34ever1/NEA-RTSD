@@ -7,13 +7,18 @@ import pygame
 import math
 from projectile import Projectile
 from building import Building
+from pathfinder_algo import algorithm,heuristic,reconstruct_path
 
 
 class Unit():
 
-    def __init__(self,SCREEN,name:str,health:int,unit_list:list,enemy_list:list,natural_building_list:list,projectile_list:list,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1,image:str="images/default.png",maxdistance:int=64,rof:int=1,speed:int=5,pos:list=[0,0]):
-        self.name = name
+    def __init__(self,SCREEN,grid,name:str,health:int,unit_list:list,enemy_list:list,natural_building_list:list,projectile_list:list,projectile_speed: int=10,projectile_image: str = "images/default.png",projectile_damage: int = 1,image:str="images/default.png",maxdistance:int=64,rof:int=1,speed:int=5,pos:list=[0,0]):
+        
         self.SCREEN = SCREEN
+        self.grid = grid
+
+        self.name = name
+
         self.health = health
         self.range = maxdistance
         self.rof = rof
@@ -37,6 +42,7 @@ class Unit():
         
         self.ordered = False
         self.target = [0,0]
+        self.path = []
 
     def get_name(self):
         return(self.name)
@@ -74,18 +80,83 @@ class Unit():
 
 
     def update(self):
+        # Movement code
         if self.ordered == True:
-            if isinstance(self.target,list):
+            if isinstance(self.target,list): 
+                tile_list = self.grid.get_tile_list()
+                for row in tile_list:
+                    for tile in row: 
+                        tile.update_neighbours(tile_list)
+                self.path = algorithm(tile_list,tile_list[self.pos[0]//32][self.pos[1]//32] , tile_list[self.target[0]//32][self.target[1]//32])
+                self.ordered = False
+                print(self.path)
+        if self.ordered == False:
+            if self.path:
+                target_x,target_y = self.path[-1].get_pos()  # type: ignore
+                if math.sqrt(math.pow(target_x-self.pos[0],2)+math.pow(target_y-self.pos[1],2)) < 3:
+                    self.path.pop()  # type: ignore
+                try:
+                    self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
+                except ZeroDivisionError:
+                    self.theta = math.pi/2
+                # Get angle between self and target assuming target is in bottom left of projectile. 
+                if self.pos[0] > target_x:
+                    if self.pos[1] > target_y:
+                        self.speed_x = -(math.cos(self.theta)*self.speed)
+                        self.speed_y = -(math.sin(self.theta)*self.speed)
+                    else:
+                        self.speed_x = -(math.cos(self.theta)*self.speed)
+                        self.speed_y = math.sin(self.theta)*self.speed
+                else:
+                    if self.pos[1] < target_y:
+                        self.speed_x = math.cos(self.theta)*self.speed
+                        self.speed_y = math.sin(self.theta)*self.speed
+                    else:
+                        self.speed_x = math.cos(self.theta)*self.speed
+                        self.speed_y = -(math.sin(self.theta)*self.speed)
+                self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
 
-                # Working out x and y velocity
-                target_x,target_y = self.target # Target position
-                target_x = target_x-16
-                target_y = target_y-16
-                pos_x,pos_y = self.pos # Own position
 
+
+        # Shooting & projectile code
+        if self.fire_period>0:
+            self.fire_period-=self.clock.tick(60)
+        elif not(isinstance(self.target,list)) and self.ordered == True:
+            target_pos = self.target.get_pos()
+            target_x,target_y = target_pos
+            absolute_distance = math.sqrt(math.pow(target_pos[0]-self.pos[0],2)+math.pow(target_pos[1]-self.pos[1],2))
+
+            if absolute_distance < self.range:
+                if self.target.get_health()<1:
+                    self.ordered = False
+                else:
+                    Projectile(self.SCREEN,[self.pos[0],self.pos[1]],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,[target_x,target_y])
+                    self.fire_period = 1000/self.rof
+        else:
+            closest_enemy = None
+            closest_distance = 0
+            for enemy in self.enemy_list:
+                target_x,target_y = enemy.get_pos()
+                absolute_distance = int(math.sqrt(math.pow(target_y-self.pos[1],2)+math.pow(target_x-self.pos[0],2)))
+                if absolute_distance < closest_distance or closest_distance == 0:
+                    closest_distance = absolute_distance
+                    closest_enemy = enemy
+            if closest_distance < self.range:
+                try:
+                    Projectile(self.SCREEN,[self.pos[0]+int(self.rect.width/2),self.pos[1]+int(self.rect.height/2)],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,(target_x,target_y))
+                except:
+                    pass
+
+        self.SCREEN.blit(self.get_image(),self.get_rect())
+
+
+    def on_death(self):
+        self.unit_list.remove(self)
+"""
                 absolute_distance = int(math.sqrt(math.pow(target_y-pos_y,2)+math.pow(target_x-pos_x,2)))
                 if absolute_distance < 10:
                     self.ordered = False
+
 
                 try:
                     self.theta = math.atan(abs(target_y-pos_y)/abs(target_x-pos_x))
@@ -139,38 +210,7 @@ class Unit():
                     self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
 
                     # Stands in for advanced movement
-
-        # Shooting & projectile code
-        if self.fire_period>0:
-            self.fire_period-=self.clock.tick(60)
-        elif not(isinstance(self.target,list)) and self.ordered == True:
-            if absolute_distance < self.range:
-                if self.target.get_health()<1:
-                    self.ordered = False
-                else:
-                    Projectile(self.SCREEN,[self.pos[0],self.pos[1]],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,[target_x,target_y])
-                    self.fire_period = 1000/self.rof
-        else:
-            closest_enemy = None
-            closest_distance = 0
-            for enemy in self.enemy_list:
-                target_x,target_y = enemy.get_pos()
-                absolute_distance = int(math.sqrt(math.pow(target_y-self.pos[1],2)+math.pow(target_x-self.pos[0],2)))
-                if absolute_distance < closest_distance or closest_distance == 0:
-                    closest_distance = absolute_distance
-                    closest_enemy = enemy
-            if closest_distance < self.range:
-                try:
-                    Projectile(self.SCREEN,[self.pos[0]+int(self.rect.width/2),self.pos[1]+int(self.rect.height/2)],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,(target_x,target_y))
-                except:
-                    pass
-
-        self.SCREEN.blit(self.get_image(),self.get_rect())
-
-
-    def on_death(self):
-        self.unit_list.remove(self)
-
+"""
     
 
 

@@ -29,7 +29,7 @@ class Grid():
         for x in range(grid_dimensions[0]):
             self.tile_list.append([])
             for y in range(grid_dimensions[1]):
-                self.tile_list[x].append(Tile([x,y]))
+                self.tile_list[x].append(Tile(self.tile_list,[x,y],grid_dimensions))
 
         # Generate mines
         counter = 0
