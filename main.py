@@ -36,6 +36,7 @@ hud.set_grid(grid)
 inputHandler.set_grid(grid)
 
 # Debugging
+enemy_list.append(Unit(SCREEN,grid.get_tile_list,"enemy",10,enemy_list,unit_list,natural_building_list,projectile_list,10,"images/bullet_0.png",1,"images/default2.png",90,3,10,[100,100]))
 
 #Mouse Tracking variables
 mouse_down = False

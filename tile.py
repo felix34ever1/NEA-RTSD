@@ -15,8 +15,8 @@ class Tile():
         self.grid = grid
         self.grid_coordinates = grid_coordinates
         self.movement_difficulty = 1
-        self.row = grid_coordinates[1]//32
-        self.column = grid_coordinates[0]//32
+        self.row = grid_coordinates[0]
+        self.column = grid_coordinates[1]
         self.total_rows, self.total_columns = grid_size
 
     # Getters & Setters
@@ -38,7 +38,7 @@ class Tile():
         self.neighbours = []
         if (
             self.row < self.total_rows - 1
-            and not grid[self.row + 1][self.column].get_difficulty() > 1
+            and not (grid[self.row + 1][self.column].get_difficulty() > 1)
         ):  # DOWN
             self.neighbours.append(grid[self.row + 1][self.column])
 
@@ -46,7 +46,7 @@ class Tile():
             self.neighbours.append(grid[self.row - 1][self.column])
 
         if (
-            self.column < self.total_rows - 1
+            self.column < self.total_columns - 1
             and not grid[self.row][self.column + 1].get_difficulty() > 1
         ):  # RIGHT
             self.neighbours.append(grid[self.row][self.column + 1])

@@ -87,10 +87,22 @@ class Unit():
                 for row in tile_list:
                     for tile in row: 
                         tile.update_neighbours(tile_list)
-                self.path = algorithm(tile_list,tile_list[self.pos[0]//32][self.pos[1]//32] , tile_list[self.target[0]//32][self.target[1]//32])
+                self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target[0]//32][self.target[1]//32])
+                if isinstance(self.path,bool):
+                    pass
+                else:
+                    if len(self.path)>0:
+                        self.path.pop() #type: ignore
                 self.ordered = False
                 print(self.path)
-        if self.ordered == False:
+            else:# isinstance(self.target,Unit):
+                tile_list = self.grid.get_tile_list()
+                for row in tile_list:
+                    for tile in row:
+                        tile.update_neighbours(tile_list)
+                self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target.get_pos()[0]//32][self.target.get_pos()[1]//32])
+
+        elif self.ordered == False:
             if self.path:
                 target_x,target_y = self.path[-1].get_pos()  # type: ignore
                 if math.sqrt(math.pow(target_x-self.pos[0],2)+math.pow(target_y-self.pos[1],2)) < 3:

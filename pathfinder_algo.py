@@ -14,7 +14,7 @@ def reconstruct_path(came_from, current): #traverse from end node to start node
     return traversal_path
         
 
-def algorithm(grid,start,end):
+def algorithm(grid,start,end): #A* Algorithm
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
