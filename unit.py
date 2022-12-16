@@ -93,19 +93,27 @@ class Unit():
                 else:
                     if len(self.path)>0:
                         self.path.pop() #type: ignore
+                        pass
                 self.ordered = False
-                print(self.path)
             else:# isinstance(self.target,Unit):
                 tile_list = self.grid.get_tile_list()
                 for row in tile_list:
                     for tile in row:
                         tile.update_neighbours(tile_list)
                 self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target.get_pos()[0]//32][self.target.get_pos()[1]//32])
+                if isinstance(self.path,bool):
+                    pass
+                else:
+                    if len(self.path)>0:
+                        self.path.pop() #type: ignore
+                        for i in range(self.range//32):
+                            self.path.pop(0)
+                self.ordered = False
 
         elif self.ordered == False:
             if self.path:
                 target_x,target_y = self.path[-1].get_pos()  # type: ignore
-                if math.sqrt(math.pow(target_x-self.pos[0],2)+math.pow(target_y-self.pos[1],2)) < 3:
+                if abs(target_x-self.pos[0]) < 1 and abs(target_y-self.pos[1]) < 1:
                     self.path.pop()  # type: ignore
                 try:
                     self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
