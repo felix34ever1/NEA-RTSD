@@ -139,9 +139,9 @@ class Unit():
 
 
         # Shooting & projectile code
-        if self.fire_period>0:
+        if self.fire_period>0: # If on cooldown:
             self.fire_period-=self.clock.tick(60)
-        elif not(isinstance(self.target,list)) and self.ordered == True:
+        elif not(isinstance(self.target,list)) and self.ordered == True: # If has a target enemy to attack
             target_pos = self.target.get_pos()
             target_x,target_y = target_pos
             absolute_distance = math.sqrt(math.pow(target_pos[0]-self.pos[0],2)+math.pow(target_pos[1]-self.pos[1],2))
@@ -152,20 +152,24 @@ class Unit():
                 else:
                     Projectile(self.SCREEN,[self.pos[0],self.pos[1]],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,[target_x,target_y])
                     self.fire_period = 1000/self.rof
-        else:
+        else: #Check if enemies are close enough to fire:
             closest_enemy = None
             closest_distance = 0
-            for enemy in self.enemy_list:
-                target_x,target_y = enemy.get_pos()
-                absolute_distance = int(math.sqrt(math.pow(target_y-self.pos[1],2)+math.pow(target_x-self.pos[0],2)))
-                if absolute_distance < closest_distance or closest_distance == 0:
-                    closest_distance = absolute_distance
-                    closest_enemy = enemy
-            if closest_distance < self.range:
-                try:
-                    Projectile(self.SCREEN,[self.pos[0]+int(self.rect.width/2),self.pos[1]+int(self.rect.height/2)],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,(target_x,target_y))
-                except:
-                    pass
+            if not(self.enemy_list): # if there are no enemies:
+                pass
+            else:
+                for enemy in self.enemy_list:
+                    target_x,target_y = enemy.get_pos()
+                    absolute_distance = int(math.sqrt(math.pow(target_y-self.pos[1],2)+math.pow(target_x-self.pos[0],2)))
+                    if absolute_distance < closest_distance or closest_distance == 0:
+                        closest_distance = absolute_distance
+                        closest_enemy = enemy
+                if closest_distance < self.range:
+                    try:
+                        Projectile(self.SCREEN,[self.pos[0]+int(self.rect.width/2),self.pos[1]+int(self.rect.height/2)],self.projectile_speed,self.projectile_image,self.projectile_list,self.natural_building_list,self.enemy_list,self.projectile_damage,(target_x,target_y))
+                        self.fire_period = 1000/self.rof
+                    except:
+                        pass
 
         self.SCREEN.blit(self.get_image(),self.get_rect())
 

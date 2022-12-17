@@ -94,7 +94,7 @@ class Hud():
 
     def set_grid(self,grid):
         self.grid = grid
-        unit_buttons = [UnitButton(self,self.grid,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"barracks","soldier","images/default.png","Unit(self.SCREEN,self.grid,'soldier',10,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,10,'images/bullet_0.png',5,'images/default.png',100,2,2,")]
+        unit_buttons = [UnitButton(self,self.grid,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"barracks","soldier","images/default.png","Unit(self.SCREEN,self.grid,'soldier',10,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,10,'images/bullet_0.png',5,'images/default.png',100,2,1,")]
         for button in unit_buttons:
             self.buttons_list.append(button)  # type: ignore
         unit_counter = 1

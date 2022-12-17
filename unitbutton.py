@@ -34,13 +34,19 @@ class UnitButton(Button):
     def get_unit_name(self):
         return(self.unit_name)
 
+    def get_cost(self):
+        return(self.cost)
+
     def set_spawn_point(self,pos):
         self.building_position = [pos[0],pos[1]]
 
     def on_press(self):
-        exec_string = self.exec_string+str(self.building_position)+")"
-        print(exec_string)
-        exec(exec_string)
+        if self.hud.get_money() - self.cost < 0: 
+            pass
+        else:
+            exec_string = self.exec_string+str(self.building_position)+")"
+            exec(exec_string)
+            self.hud.sub_money(self.cost)
 
 
         
