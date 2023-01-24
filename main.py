@@ -45,6 +45,33 @@ mouse_down = False
 down_length = 0
 mouse_x, mouse_y = 0,0
 
+tutorialimage1 = pygame.image.load("images/tutorial_1.png")
+tutorialimage2 = pygame.image.load("images/tutorial_2.png")
+tutorialimage3 = pygame.image.load("images/tutorial_3.png")
+tutorialimage4 = pygame.image.load("images/tutorial_4.png")
+image_list = [tutorialimage1,tutorialimage2,tutorialimage3,tutorialimage4]
+tutorial_counter = 0
+tutorial_rectangle = image_list[tutorial_counter].get_rect()
+tutorial_rectangle.topleft = ((300,200)) 
+
+#Tutorial Loop
+isTutorial = True
+while isTutorial:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            isRunning = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            tutorial_counter+=1
+            if tutorial_counter > 3:
+                isTutorial = False
+            else:
+                tutorial_rectangle = image_list[tutorial_counter].get_rect()
+                tutorial_rectangle.topleft = ((300,200)) 
+ 
+    if tutorial_counter<4:
+        SCREEN.blit(image_list[tutorial_counter],tutorial_rectangle)
+        pygame.display.update()    
+
 
 #Run loop
 is_running = True

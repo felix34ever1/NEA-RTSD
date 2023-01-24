@@ -119,7 +119,7 @@ class Unit():
                     self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
                 except ZeroDivisionError:
                     self.theta = math.pi/2
-                # Get angle between self and target assuming target is in bottom left of projectile. 
+                # Get angle between self and target assuming target is in bottom right of projectile. 
                 if self.pos[0] > target_x:
                     if self.pos[1] > target_y:
                         self.speed_x = -(math.cos(self.theta)*self.speed)

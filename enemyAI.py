@@ -33,26 +33,34 @@ class EnemyAI():
         base_unit = self.unit_blueprint_list[random.randint(0,len(self.unit_blueprint_list)-1)]
         complement_unit = self.unit_blueprint_list[random.randint(0,len(self.unit_blueprint_list)-1)]
         
-        base_unit_amount = random.randint(1,(current_points//base_unit[1]))
+        base_unit_amount = 0
+        complement_unit_amount = 0
+        try:
+            base_unit_amount = random.randint(1,(current_points//base_unit[1]))
+        except:
+            base_Unit_amount = 1
+        
         current_points-=base_unit[1]*base_unit_amount
        
-        complement_unit_amount = current_points//complement_unit[1]        
-
+        try:
+            complement_unit_amount = current_points//complement_unit[1]        
+        except:
+            complement_unit_amount = 0
         target_x, target_y = target.get_pos()
 
         construct_list = []
 
-        base_unit_exec = ('construct_list.append('+base_unit[0]+str([32,32])+'))')
+        base_unit_exec = ('construct_list.append('+base_unit[0]+str([300,300])+'))')
         for _ in range(base_unit_amount):
             exec(base_unit_exec)
 
         
-        complement_unit_exec = ('construct_list.append('+complement_unit[0]+str([32,32])+'))')
+        complement_unit_exec = ('construct_list.append('+complement_unit[0]+str([300,300])+'))')
         for _ in range(complement_unit_amount):
             exec(complement_unit_exec)
         
         for unit in construct_list:
-            unit.move_to([300,300])
+            unit.move_to([target_x+32,target_y+32])
 
 
 
