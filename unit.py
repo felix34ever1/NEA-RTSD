@@ -43,6 +43,8 @@ class Unit():
         self.ordered = False
         self.target = [0,0]
         self.path = []
+        self.simple = False # Will dictate if simple movement is used
+        self.simple_target = []
 
     def get_name(self):
         return(self.name)
@@ -74,67 +76,106 @@ class Unit():
         self.ordered = True
         self.target = target_pos
     
+
+    def simple_move_to(self,target_pos):
+        self.ordered = True
+        self.simple = True
+        self.simple_target = target_pos
+
     def attack(self,target):
         self.ordered = True
-        self.target = target
+        self.simple_target = target
 
 
     def update(self):
         # Movement code
         if self.ordered == True:
-            if isinstance(self.target,list): 
-                tile_list = self.grid.get_tile_list()
-                for row in tile_list:
-                    for tile in row: 
-                        tile.update_neighbours(tile_list)
-                self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target[0]//32][self.target[1]//32])
-                if isinstance(self.path,bool):
-                    pass
-                else:
-                    if len(self.path)>0:
-                        self.path.pop() #type: ignore
+            if not self.simple:
+                if isinstance(self.target,list): 
+                    tile_list = self.grid.get_tile_list()
+                    for row in tile_list: #Updates tiles incase anything changed
+                        for tile in row: 
+                            tile.update_neighbours(tile_list)
+                    self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target[0]//32][self.target[1]//32])
+                    # Creates a path based on an algorithm
+                    if isinstance(self.path,bool):
                         pass
-                self.ordered = False
-            else:# isinstance(self.target,Unit):
-                tile_list = self.grid.get_tile_list()
-                for row in tile_list:
-                    for tile in row:
-                        tile.update_neighbours(tile_list)
-                self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target.get_pos()[0]//32][self.target.get_pos()[1]//32])
-                if isinstance(self.path,bool):
-                    pass
-                else:
-                    if len(self.path)>0:
-                        self.path.pop() #type: ignore
-                        for i in range(self.range//32):
-                            self.path.pop(0)
-                self.ordered = False
+                    else:
+                        if len(self.path)>0:
+                            self.path.pop()
+                    self.ordered = False
+                else:# isinstance(self.target,Unit):
+                    tile_list = self.grid.get_tile_list()
+                    for row in tile_list:
+                        for tile in row:
+                            tile.update_neighbours(tile_list)
+                    self.path = algorithm(tile_list,tile_list[int(self.pos[0]//32)][int(self.pos[1]//32)] , tile_list[self.target.get_pos()[0]//32][self.target.get_pos()[1]//32])
+                    if isinstance(self.path,bool):
+                        pass
+                    else:
+                        if len(self.path)>0:
+                            self.path.pop()
+                            for i in range(self.range//32):
+                                self.path.pop(0)
+                    self.ordered = False
+
 
         elif self.ordered == False:
-            if self.path:
-                target_x,target_y = self.path[-1].get_pos()  # type: ignore
-                if abs(target_x-self.pos[0]) < 1 and abs(target_y-self.pos[1]) < 1:
-                    self.path.pop()  # type: ignore
-                try:
-                    self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
-                except ZeroDivisionError:
-                    self.theta = math.pi/2
-                # Get angle between self and target assuming target is in bottom right of projectile. 
-                if self.pos[0] > target_x:
-                    if self.pos[1] > target_y:
-                        self.speed_x = -(math.cos(self.theta)*self.speed)
-                        self.speed_y = -(math.sin(self.theta)*self.speed)
+            if len(self.path) != 0:# type: ignore
+                if self.simple == False:
+                    target_x,target_y = self.path[-1].get_pos()  # type: ignore
+                    if abs(target_x-self.pos[0]) < 1 and abs(target_y-self.pos[1]) < 1:
+                        self.path.pop()  # type: ignore
+                    try:
+                        self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
+                    except ZeroDivisionError:
+                        self.theta = math.pi/2
+                    # Get angle between self and target assuming target is in bottom right of projectile. 
+                    if self.pos[0] > target_x:
+                        if self.pos[1] > target_y:
+                            self.speed_x = -(math.cos(self.theta)*self.speed)
+                            self.speed_y = -(math.sin(self.theta)*self.speed)
+                        else:
+                            self.speed_x = -(math.cos(self.theta)*self.speed)
+                            self.speed_y = math.sin(self.theta)*self.speed
                     else:
-                        self.speed_x = -(math.cos(self.theta)*self.speed)
-                        self.speed_y = math.sin(self.theta)*self.speed
+                        if self.pos[1] < target_y:
+                            self.speed_x = math.cos(self.theta)*self.speed
+                            self.speed_y = math.sin(self.theta)*self.speed
+                        else:
+                            self.speed_x = math.cos(self.theta)*self.speed
+                            self.speed_y = -(math.sin(self.theta)*self.speed)
+                    self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
+
+
+        # Simple movement
+        if self.simple:
+            target_x,target_y = self.simple_target # type: ignore
+            if abs(target_x-self.pos[0]) < 32 and abs(target_y-self.pos[1]) < 32:
+                self.simple = False
+            try:
+                self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
+            except ZeroDivisionError:
+                self.theta = math.pi/2
+            # Get angle between self and target assuming target is in bottom right of projectile. 
+            if self.pos[0] > target_x:
+                if self.pos[1] > target_y:
+                    self.speed_x = -(math.cos(self.theta)*self.speed)
+                    self.speed_y = -(math.sin(self.theta)*self.speed)
                 else:
-                    if self.pos[1] < target_y:
-                        self.speed_x = math.cos(self.theta)*self.speed
-                        self.speed_y = math.sin(self.theta)*self.speed
-                    else:
-                        self.speed_x = math.cos(self.theta)*self.speed
-                        self.speed_y = -(math.sin(self.theta)*self.speed)
-                self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
+                    self.speed_x = -(math.cos(self.theta)*self.speed)
+                    self.speed_y = math.sin(self.theta)*self.speed
+            else:
+                if self.pos[1] < target_y:
+                    self.speed_x = math.cos(self.theta)*self.speed
+                    self.speed_y = math.sin(self.theta)*self.speed
+                else:
+                    self.speed_x = math.cos(self.theta)*self.speed
+                    self.speed_y = -(math.sin(self.theta)*self.speed)
+            self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
+
+
+
 
 
 

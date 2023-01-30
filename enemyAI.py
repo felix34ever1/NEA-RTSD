@@ -50,17 +50,17 @@ class EnemyAI():
 
         construct_list = []
 
-        base_unit_exec = ('construct_list.append('+base_unit[0]+str([300,300])+'))')
+        base_unit_exec = ('construct_list.append('+base_unit[0]+str([0,0])+'))')
         for _ in range(base_unit_amount):
             exec(base_unit_exec)
 
         
-        complement_unit_exec = ('construct_list.append('+complement_unit[0]+str([300,300])+'))')
+        complement_unit_exec = ('construct_list.append('+complement_unit[0]+str([0,0])+'))')
         for _ in range(complement_unit_amount):
             exec(complement_unit_exec)
         
         for unit in construct_list:
-            unit.move_to([target_x+32,target_y+32])
+            unit.simple_move_to([target_x,target_y])
 
 
 
