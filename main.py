@@ -4,8 +4,8 @@ from building import Building
 
 pygame.init()
 from hud import Hud
-from inputhandler import InputHandler
-from grid import Grid
+from inputhandler import InputHandler   
+from grid import Grid   
 from projectile import Projectile
 from unit import Unit
 from enemyAI import EnemyAI
@@ -30,13 +30,14 @@ projectile_list = []
 # One time instances defined
 hud = Hud(building_list,natural_building_list,SCREEN,unit_list,projectile_list,enemy_list) # type: ignore 
 grid = Grid(SCREEN,[27,18],natural_building_list)  # type: ignore
-grid.place_grid(Building(grid,SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9])
 inputHandler = InputHandler(grid,SCREEN,hud,unit_list,building_list,natural_building_list,enemy_list,projectile_list)
+
+grid.place_grid(Building(grid,SCREEN,building_list,"MCV",150,"images/HQ_0.png",[13*32,9*32]),[13,9]) # Place MCV
+MCV = building_list[0] # Assign the MCV object to a value to check if destroyed later
 
 hud.set_grid(grid)
 inputHandler.set_grid(grid)
 
-enemyAI = EnemyAI(SCREEN,grid,hud,unit_list,building_list,projectile_list,natural_building_list,enemy_list)
 
 # Debugging
 
@@ -55,15 +56,17 @@ tutorial_rectangle = image_list[tutorial_counter].get_rect()
 tutorial_rectangle.topleft = ((300,200)) 
 
 #Tutorial Loop
-isTutorial = True
-while isTutorial:
+is_tutorial = True
+while is_tutorial:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isRunning = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+
+        if event.type == pygame.MOUSEBUTTONDOWN: # When button is pressed, go through slides
             tutorial_counter+=1
-            if tutorial_counter > 3:
-                isTutorial = False
+            if tutorial_counter > 3: # After end slide, start game
+                is_tutorial = False
+                enemyAI = EnemyAI(SCREEN,grid,hud,unit_list,building_list,projectile_list,natural_building_list,enemy_list)
             else:
                 tutorial_rectangle = image_list[tutorial_counter].get_rect()
                 tutorial_rectangle.topleft = ((300,200)) 
@@ -75,6 +78,7 @@ while isTutorial:
 
 #Run loop
 is_running = True
+is_dead = False
 while is_running:
     
     SCREEN.fill((178, 188, 170))
@@ -98,6 +102,10 @@ while is_running:
         unit.update()
     for enemy in enemy_list:
         enemy.update()
+    
+    if MCV not in building_list: # Checks if MCV is alive; else run death loop.
+        is_running = False
+        is_dead = True
     
     # LMB Logic
     if buttons_pressed[0] == True:
@@ -155,8 +163,21 @@ while is_running:
             inputHandler.order(mouse_x,mouse_y)
     
     inputHandler.update()
-    pygame.display.update()
     enemyAI.update()
+    pygame.display.update()
+
 
 
     clock.tick(FPS)
+
+font = pygame.font.Font("fonts/C&C Red Alert [INET].ttf",24)
+while is_dead:
+    SCREEN.fill((0,0,0))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            is_dead = False
+
+    text = font.render("MCV destroyed: Better luck next time",False,(255,255,255))
+    SCREEN.blit(text,(410,300))
+    pygame.display.update()

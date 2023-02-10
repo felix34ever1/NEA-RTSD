@@ -121,58 +121,61 @@ class Unit():
 
 
         elif self.ordered == False:
-            if len(self.path) != 0:# type: ignore
-                if self.simple == False:
-                    target_x,target_y = self.path[-1].get_pos()  # type: ignore
-                    if abs(target_x-self.pos[0]) < 1 and abs(target_y-self.pos[1]) < 1:
-                        self.path.pop()  # type: ignore
-                    try:
-                        self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
-                    except ZeroDivisionError:
-                        self.theta = math.pi/2
-                    # Get angle between self and target assuming target is in bottom right of projectile. 
-                    if self.pos[0] > target_x:
-                        if self.pos[1] > target_y:
-                            self.speed_x = -(math.cos(self.theta)*self.speed)
-                            self.speed_y = -(math.sin(self.theta)*self.speed)
+            if isinstance(self.path,list):
+                if len(self.path) != 0:# type: ignore
+                    if self.simple == False:
+                        target_x,target_y = self.path[-1].get_pos()  # type: ignore
+                        if abs(target_x-self.pos[0]) < 1 and abs(target_y-self.pos[1]) < 1:
+                            self.path.pop()  # type: ignore
+                        try:
+                            self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
+                        except ZeroDivisionError:
+                            self.theta = math.pi/2
+                        # Get angle between self and target assuming target is in bottom right of projectile. 
+                        if self.pos[0] > target_x:
+                            if self.pos[1] > target_y:
+                                self.speed_x = -(math.cos(self.theta)*self.speed)
+                                self.speed_y = -(math.sin(self.theta)*self.speed)
+                            else:
+                                self.speed_x = -(math.cos(self.theta)*self.speed)
+                                self.speed_y = math.sin(self.theta)*self.speed
                         else:
-                            self.speed_x = -(math.cos(self.theta)*self.speed)
-                            self.speed_y = math.sin(self.theta)*self.speed
-                    else:
-                        if self.pos[1] < target_y:
-                            self.speed_x = math.cos(self.theta)*self.speed
-                            self.speed_y = math.sin(self.theta)*self.speed
-                        else:
-                            self.speed_x = math.cos(self.theta)*self.speed
-                            self.speed_y = -(math.sin(self.theta)*self.speed)
-                    self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
+                            if self.pos[1] < target_y:
+                                self.speed_x = math.cos(self.theta)*self.speed
+                                self.speed_y = math.sin(self.theta)*self.speed
+                            else:
+                                self.speed_x = math.cos(self.theta)*self.speed
+                                self.speed_y = -(math.sin(self.theta)*self.speed)
+                        self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
 
 
-        # Simple movement
+        # Simple movement: Used for enemies
         if self.simple:
             target_x,target_y = self.simple_target # type: ignore
-            if abs(target_x-self.pos[0]) < 32 and abs(target_y-self.pos[1]) < 32:
-                self.simple = False
-            try:
-                self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
-            except ZeroDivisionError:
-                self.theta = math.pi/2
-            # Get angle between self and target assuming target is in bottom right of projectile. 
-            if self.pos[0] > target_x:
-                if self.pos[1] > target_y:
-                    self.speed_x = -(math.cos(self.theta)*self.speed)
-                    self.speed_y = -(math.sin(self.theta)*self.speed)
-                else:
-                    self.speed_x = -(math.cos(self.theta)*self.speed)
-                    self.speed_y = math.sin(self.theta)*self.speed
+            # Get the coordinates to go to from an order.
+            if abs(target_x-self.pos[0]) < 32 and abs(target_y-self.pos[1]) < 32: # Check if arrived
+                pass
             else:
-                if self.pos[1] < target_y:
-                    self.speed_x = math.cos(self.theta)*self.speed
-                    self.speed_y = math.sin(self.theta)*self.speed
+                try: # Try to get angle, if failure due to zero division, means that angle is pi/2 rad
+                    self.theta = math.atan(abs(target_y-self.pos[1])/abs(target_x-self.pos[0]))
+                except ZeroDivisionError:
+                    self.theta = math.pi/2
+                # Get angle between self and target assuming target is in bottom right of projectile. 
+                if self.pos[0] > target_x: # Assigns the angle to the quadrant it is moving towards and sets speed accordingly.
+                    if self.pos[1] > target_y:
+                        self.speed_x = -(math.cos(self.theta)*self.speed)
+                        self.speed_y = -(math.sin(self.theta)*self.speed)
+                    else:
+                        self.speed_x = -(math.cos(self.theta)*self.speed)
+                        self.speed_y = math.sin(self.theta)*self.speed
                 else:
-                    self.speed_x = math.cos(self.theta)*self.speed
-                    self.speed_y = -(math.sin(self.theta)*self.speed)
-            self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
+                    if self.pos[1] < target_y:
+                        self.speed_x = math.cos(self.theta)*self.speed
+                        self.speed_y = math.sin(self.theta)*self.speed
+                    else:
+                        self.speed_x = math.cos(self.theta)*self.speed
+                        self.speed_y = -(math.sin(self.theta)*self.speed)
+                self.set_pos([self.pos[0]+self.speed_x,self.pos[1]+self.speed_y])
 
 
 
@@ -216,7 +219,10 @@ class Unit():
 
 
     def on_death(self):
-        self.unit_list.remove(self)
+        try:
+            self.unit_list.remove(self)
+        except:
+            print("Unit death error")
 """
                 absolute_distance = int(math.sqrt(math.pow(target_y-pos_y,2)+math.pow(target_x-pos_x,2)))
                 if absolute_distance < 10:

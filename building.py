@@ -54,5 +54,8 @@ class Building():
 
     def on_death(self):
         self.grid.get_grid(self.pos[0],self.pos[1]).occupy(None)
-        self.building_list.remove(self)
+        try:
+            self.building_list.remove(self)
+        except:
+                pass
         # Removing the only reference to itself will automatically clean it up from memory
