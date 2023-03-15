@@ -9,8 +9,7 @@ import pygame
 class EconomyBuilding(Building):
 
     def __init__(self,SCREEN,building_list:list,name: str, grid,hud,natural_building_list,health:int=100,image:str="images/default.png",pos:list=[0,0],economy_period:int=1000,economy_tick:int=100):
-        super().__init__(SCREEN,building_list,name,health,image,pos)
-        self.grid = grid
+        super().__init__(grid,SCREEN,building_list,name,health,image,pos)
         self.hud = hud
         self.natural_building_list = natural_building_list
         self.economy_period = economy_period # Amount of time (in miliseconds) between economy ticks

@@ -8,28 +8,35 @@ import pygame
 from buildingbutton import BuildingButton
 from unitbutton import UnitButton
 from button import Button
+from building import Building
 from unitbuilding import UnitBuilding
 from defencebuilding import DefenceBuilding
+from economybuilding import EconomyBuilding
+from unit import Unit
 
 class Hud():
 
-    def __init__(self,building_list: list, natural_building_list: list, SCREEN: pygame.Surface):
+    def __init__(self,building_list: list, natural_building_list: list, SCREEN: pygame.Surface,unit_list,projectile_list,enemy_list):
         
         self.building_list = building_list
         self.natural_building_list = natural_building_list
+        self.unit_list = unit_list
+        self.projectile_list = projectile_list
+        self.enemy_list = enemy_list
         self.SCREEN = SCREEN
         self.buttons_list = []
-        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/ore_smelter.png","EconomyBuilding(self.SCREEN,self.building_list,'smeltry',self.grid,self.hud,self.natural_building_list,150,'images/ore_smelter.png',[0,0])"),
-        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/barracks.png","Building(self.SCREEN,self.building_list,'barracks',50,'images/barracks.png',[0,0])"),
-        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","DefenceBuilding(self.hud,'tower',100,self.SCREEN,self.building_list,'images/defence_tower.png',self.natural_building_list,self.enemy_list,96,self.projectile_list,[0,0],2,3,'images/bullet_0.png',1000000)"),
-        UnitButton(self,self.SCREEN,self.buttons_list,self.building_list,"barracks","soldier")] # Buttons to be manually created
+        self.buttons_list = [BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/ore_smelter.png","EconomyBuilding(self.SCREEN,self.building_list,'smeltry',self.grid,self.hud,self.natural_building_list,50,'images/ore_smelter.png',[0,0],5000,100)",100),
+        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/barracks.png","UnitBuilding(self.grid,self.SCREEN,self.building_list,'barracks',100,'images/barracks.png',[0,0],'',200)",200),
+        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/defence_tower.png","DefenceBuilding(self.grid,'tower',100,self.SCREEN,self.building_list,'images/defence_tower.png',self.natural_building_list,self.enemy_list,96,self.projectile_list,[0,0],2,3,'images/bullet_0.png',5)",500),
+        BuildingButton(self,self.SCREEN,self.buttons_list,self.building_list,None,"images/mechbay.png","UnitBuilding(self.grid,self.SCREEN,self.building_list,'mechbay',50,'images/mechbay.png',[0,0],'',1000)",1000)] # Buttons to be manually created
+        
         self.state = 0
         self.change_button_0 = Button(self,SCREEN,self.buttons_list,"images/building_menu.png","",0)
         self.change_button_0.set_pos(864,50)
         self.change_button_1 = Button(self,SCREEN,self.buttons_list,"images/unit_menu.png","",0)
         self.change_button_1.set_pos(932,50)
         self.grid = None
-        self.money = 5
+        self.money = 100
         self.font = pygame.font.Font("fonts/C&C Red Alert [INET].ttf",24)
 
         self.building_string = ""
@@ -88,7 +95,31 @@ class Hud():
 
     def set_grid(self,grid):
         self.grid = grid
-
+        unit_buttons = [UnitButton(self,self.grid,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"barracks","lite","images/mech_lite.png","Unit(self.SCREEN,self.grid,'lite',10,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,10,'images/bullet_0.png',2,'images/mech_lite.png',100,2,1,",20),
+        UnitButton(self,self.grid,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"barracks","runner","images/mech_runner.png","Unit(self.SCREEN,self.grid,'runner',4,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,10,'images/bullet_1.png',1,'images/mech_runner.png',50,3,3,",10),
+        UnitButton(self,self.grid,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"mechbay","archer","images/mech_archer.png","Unit(self.SCREEN,self.grid,'archer',10,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,8,'images/missile_0.png',2,'images/mech_archer.png',256,4,2,",100),
+        UnitButton(self,self.grid,self.SCREEN,self.unit_list,self.projectile_list,self.enemy_list,self.buttons_list,self.building_list,self.natural_building_list,"mechbay","beamer","images/mech_beamer.png","Unit(self.SCREEN,self.grid,'beamer',30,self.unit_list,self.enemy_list,self.natural_building_list,self.projectile_list,14,'images/laser_0.png',10,'images/mech_beamer.png',128,5,3,",200)]
+        for button in unit_buttons:
+            self.buttons_list.append(button)  # type: ignore
+        unit_counter = 1
+        building_counter = 1
+        for button in self.buttons_list: # Assigns all buttons correct position on the hud.
+            if isinstance(button,UnitButton):
+                if unit_counter%2 == 0:
+                    posx = 944
+                else:
+                    posx = 888
+                posy = 100 + 40*(unit_counter//2)
+                unit_counter+=1
+                button.set_pos(posx,posy)
+            else:
+                if building_counter%2 == 0:
+                    posx = 944
+                else:
+                    posx = 888
+                posy = 100 + 100*((building_counter-1)//2)
+                building_counter+=1
+                button.set_pos(posx,posy)
 
     def sub_money(self,amount):
         self.money-=amount
